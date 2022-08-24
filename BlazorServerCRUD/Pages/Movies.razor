@@ -1,0 +1,49 @@
+﻿@page "/movies"
+@inject IMovieService MovieService
+@inject NavigationManager NavigationManager
+
+<h3>Movies</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Company</th>
+            <th>Release Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in MovieService.Movies)
+        {
+            <tr>
+                <td>@movie.Name</td>
+                <td>@movie.Company</td>
+                <td>@movie.ReleaseDate?.ToShortDateString()</td>
+                <td>
+                    <button class="btn btn-primary" 
+                        @onclick="(()=>ShowMovie(movie.Id))">
+                        <i class="oi oi-pencil"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<button class="btn btn-primary" @onclick="AddMovie">Add New Movie</button>
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await MovieService.ShowMovies();
+    }
+
+    void ShowMovie(int id)
+    {
+        NavigationManager.NavigateTo($"movie/{id}");
+    }
+
+    void AddMovie()
+    {
+        NavigationManager.NavigateTo("movie");
+    }
+}
